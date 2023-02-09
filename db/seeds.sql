@@ -20,13 +20,13 @@ VALUES ("Chief Executive Officer", 400000, 1),
     ("Closer", 100000, 5);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Jeff", "Beepos", 1),
+VALUES ("Jeff", "Beepos", 1, NULL),
     ("Mark", "Czech", 2, 1),
     ("Jenna", "Taylor", 3, 4),
-    ("Tim", "McAppleman", 4),
+    ("Tim", "McAppleman", 4, NULL),
     ("Jake", "Frum-Staightfarm", 5, 6), 
-    ("Dale", "Gribble", 6), 
+    ("Dale", "Gribble", 6, NULL), 
     ("Drawina", "Blank", 7, 8),
-    ("Fred", "Drunning", 8), 
+    ("Fred", "Drunning", 8, NULL), 
     ("Ricky", "Bobby", 9, 10), 
-    ("Slick", "McGrease", 10); 
+    ("Slick", "McGrease", 10, NULL);

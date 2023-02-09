@@ -19,7 +19,7 @@ const mainMenu = async () => {
         "Update employee role",
         "Exit",
       ],
-      // loop: false,
+      loop: false,
     },
   ];
 
@@ -55,67 +55,77 @@ const mainMenu = async () => {
 };
 
 const viewDepts = () => {
+  console.log("\n");
   dbConnection.query("SELECT * FROM department", (err, res) => {
     if (err) throw err;
     console.table(res);
-    startPrompt();
+    mainMenu();
   });
-  mainMenu();
 };
 
 const viewRoles = () => {
-  dbConnection.query("SELECT * FROM employee", (err, res) => {
+  console.log("\n");
+  dbConnection.query("SELECT * FROM role", (err, res) => {
     if (err) throw err;
     console.table(res);
+    mainMenu();
   });
-  mainMenu();
 };
 
 const viewEmps = () => {
-  dbConnection.query("SELECT * FROM EMPLOYEE"),
-    (err, res) => {
-      if (err) throw err;
-      console.table(res);
-    };
-  mainMenu();
+  dbConnection.query("SELECT * FROM employee", (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    mainMenu();
+  });
 };
 
-const addDept = () => {
-  dbConnection.query("SELECT * FROM EMPLOYEE"), (err, res) => {
-    prompt([
+const addEmp = () => {
+  dbConnection.query("SELECT * FROM role", (err, res) => {
+    if (err) throw err;
+    inquirer
+      .prompt([
         {
-            type: "input", 
-            name: "first_name", 
-            message: "Type the employee's first name: "
-        }, 
-        {
-            type: "input",
-            name: "last_name",
-            message: "Type the employee's last name: ",
+          type: "input",
+          name: "first_name",
+          message: "Type the employee's first name: ",
         },
         {
-            type: "list",
-            name: "roletitle",
-            message: "Choose a new role for the employee: ",
-            choices: res.map((role) => role.title)
+          type: "input",
+          name: "last_name",
+          message: "Type the employee's last name: ",
         },
         {
-            type: "list",
-            name: "managerId",
-            message: "",
-            choices: db
-        }
-    ])
-  };
-
-  mainMenu();
+          type: "list",
+          name: "role",
+          message: "Choose a new role for the employee: ",
+          choices: res.map((role) => role.title),
+        },
+        {
+          type: "list",
+          name: "manager_id",
+          message: "Choose the employee's assigned manager: ",
+          choices: [1, 4, 6, 8, 10],
+        },
+      ])
+      .then((input) => {
+        let role = res.find((role) => role.title === input.role);
+        dbConnection.query("INSERT INTO employee set ?", {
+          first_name: input.first_name,
+          last_name: input.last_name,
+          role_id: role.id,
+          manager_id: input.manager_id,
+        });
+        mainMenu();
+      });
+  });
 };
 
 const addRole = () => {
   mainMenu();
 };
 
-const addEmp = async () => {
+const addDept = async () => {
   mainMenu();
 };
 
