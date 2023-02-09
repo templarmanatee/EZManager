@@ -122,11 +122,29 @@ const addEmp = () => {
 };
 
 const addRole = () => {
-  mainMenu();
+    inquirer.prompt([
+        {
+          type : "input",
+          name : "role",
+          message : "Choose a name for the new role: "
+        }
+      ]).then(input => {
+        dbConnection.query ('INSERT INTO department SET ?', {name : input.role})
+        mainMenu();
+    });
 };
 
-const addDept = async () => {
-  mainMenu();
+const addDept = () => {
+    inquirer.prompt([
+        {
+          type : "input",
+          name : "department",
+          message : "Choose a name for the new department: "
+        }
+      ]).then(input => {
+        dbConnection.query ('INSERT INTO department SET ?', {name : input.department})
+        mainMenu();
+    });
 };
 
 const updateEmpRole = async () => {
