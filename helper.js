@@ -3,6 +3,7 @@ const inquirer = require("inquirer");
 const { query } = require("express");
 const cTable = require("console.table");
 
+//Create the initial menu selector for the program
 const mainMenu = async () => {
   const prompt = [
     {
@@ -54,6 +55,7 @@ const mainMenu = async () => {
   });
 };
 
+// View all available departments
 const viewDepts = () => {
   console.log("\n");
   dbConnection.query("SELECT * FROM department", (err, res) => {
@@ -63,6 +65,7 @@ const viewDepts = () => {
   });
 };
 
+//View all roles available 
 const viewRoles = () => {
   console.log("\n");
   dbConnection.query("SELECT * FROM role", (err, res) => {
@@ -122,33 +125,77 @@ const addEmp = () => {
 };
 
 const addRole = () => {
-    inquirer.prompt([
-        {
-          type : "input",
-          name : "role",
-          message : "Choose a name for the new role: "
-        }
-      ]).then(input => {
-        dbConnection.query ('INSERT INTO department SET ?', {name : input.role})
-        mainMenu();
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "role",
+        message: "Choose a name for the new role: ",
+      },
+    ])
+    .then((input) => {
+      dbConnection.query("INSERT INTO department SET ?", { name: input.role });
+      mainMenu();
     });
 };
 
 const addDept = () => {
-    inquirer.prompt([
-        {
-          type : "input",
-          name : "department",
-          message : "Choose a name for the new department: "
-        }
-      ]).then(input => {
-        dbConnection.query ('INSERT INTO department SET ?', {name : input.department})
-        mainMenu();
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "department",
+        message: "Choose a name for the new department: ",
+      },
+    ])
+    .then((input) => {
+      dbConnection.query("INSERT INTO department SET ?", {
+        name: input.department,
+      });
+      mainMenu();
     });
 };
 
 const updateEmpRole = async () => {
-  mainMenu();
+  dbConnection.query("SELECT * FROM employee", (err, res) => {
+    if (err) throw err;
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "employee_name",
+          message:
+            "Please select the employees whos role you would like to update",
+          choices: empRes.map(
+            (employee) => employee.first_name + " " + employee.last_name
+          ),
+        },
+      ])
+      .then((input) => {
+        const roleChanger = res.find(
+          (employee) =>
+            employee.first_name + " " + employee.last_name === input.name
+        );
+        inquirer
+          .prompt([
+            {
+              type: "list",
+              name: "role",
+              choices: res.map((role) => role.title),
+            },
+          ])
+          .then((input) => {
+            const newRole = res.find((role) => role.title === input.role);
+            dbConnection.query(
+              "UPDATE employee SET role_id = ? WHERE id = ?",
+              [newRole, roleChanger],
+              (err) => {
+                mainMenu();
+              }
+            );
+          });
+      });
+  });
 };
 
 module.exports = { mainMenu };
