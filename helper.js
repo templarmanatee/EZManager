@@ -2,6 +2,11 @@ const dbConnection = require("./connection");
 const inquirer = require("inquirer");
 const { query } = require("express");
 const cTable = require("console.table");
+const art = require("ascii-art-font");
+
+const splashScreen = async () => {
+  console.log(await art.create("Employee Manager","doom"));
+}
 
 //Create the initial menu selector for the program
 const mainMenu = async () => {
@@ -198,4 +203,5 @@ const updateEmpRole = async () => {
   });
 };
 
-module.exports = { mainMenu };
+
+module.exports = { splashScreen, mainMenu };

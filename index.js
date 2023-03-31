@@ -1,3 +1,8 @@
-const { mainMenu } = require("./helper");
+const { mainMenu, splashScreen } = require("./helper");
 
-mainMenu();
+const runCLI = async () => {
+  await splashScreen();
+  await mainMenu();
+};
+
+runCLI();
